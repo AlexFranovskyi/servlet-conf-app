@@ -78,6 +78,10 @@ public class Conference {
 	public static class Builder{
 		private Conference conference;
 		
+		private Builder() {
+			conference = new Conference();
+		}
+		
 		public Builder id(long id) {
 			conference.id = id;
 			return this;

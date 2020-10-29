@@ -11,6 +11,9 @@ public class Report {
 	private String speakerName;
 
 	private boolean approved;
+	
+	public Report() {
+	}
 
 	public Report(String name) {
 		this.name = name;
@@ -73,6 +76,10 @@ public class Report {
 	
 	public static class Builder{
 		private Report report;
+		
+		private Builder() {
+			report = new Report();
+		}
 		
 		public Builder id(long id) {
 			report.id = id;

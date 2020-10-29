@@ -32,6 +32,8 @@ public class Servlet extends HttpServlet {
         		new AuthenticationCommand());
         commands.put("registration",
         		new RegistrationCommand());
+        commands.put("register",
+        		new RegisterCommand());
 	}
 	
 	@Override

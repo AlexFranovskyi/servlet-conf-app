@@ -17,18 +17,16 @@ public class RegistrationService {
 		return user;
 	}
 	
-	public User createUser(User user, String role) {
+	public boolean createUser(User user) {
 		UserDao dao = daoFactory.createUserDao();
+		boolean res = true;
 		
-//		Optional<User> userFromDb = dao.findByNameOrEmail(user.getUsername(), user.getEmail());
-//		if (userFromDb.isPresent()) {
-//			return user;
-//		}
-		
-		user.setRole(User.Role.valueOf(role));		
 		dao.create(user);
+		if (user.getId() == 0) {
+			res = false;
+		}
 		dao.close();
-		return user;
+		return res;
 	}
 
 }

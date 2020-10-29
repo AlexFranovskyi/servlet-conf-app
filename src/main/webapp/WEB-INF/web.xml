@@ -61,7 +61,7 @@
 		</init-param>
 		<init-param>
 			<param-name>guest</param-name>
-			<param-value>user_list, login, authentication, registration</param-value>
+			<param-value>user_list, login, authentication, registration, register</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

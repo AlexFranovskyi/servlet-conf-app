@@ -15,6 +15,17 @@
 		</div>
 		
 	<div class="container">
+	
+	<c:if test="${requestScope.userExists != null && requestScope.userExists == true }">
+	<p><fmt:message key="userAlreadyExists" /></p>
+	</c:if>
+	
+	<c:if test="${sessionScope.role == 'ADMIN'}">
+	      <li class="nav-item">
+	        <a class="nav-link" href="${pageContext.request.contextPath}/admin"> <fmt:message key="adminCabinet" /> <span class="sr-only">(current)</span></a>
+	      </li>
+      </c:if>
+	
 	<form method="post" action="register">
             <div class="form-group row">
 	        <label class="col-sm-2 col-form-label"> <fmt:message key="username" />:</label>
@@ -51,7 +62,7 @@
             
             <div>
             	<button class="btn btn-primary mb-2 mr-3" type="submit"><fmt:message key="register" /></button>
-            	<a href="/authentication"><fmt:message key="backToLoginPage" /></a>
+            	<a href="authentication"><fmt:message key="backToLoginPage" /></a>
             </div>
         </form>
 	</div>

@@ -72,13 +72,17 @@ public class User{
 	public static class Builder{
 		private User user;
 		
+		private Builder() {
+			user = new User();
+		}
+		
 		public Builder id(long id) {
 			user.id = id;
 			return this;
 		}
 		
-		public Builder username(String username) {
-			user.username = username;
+		public Builder username(String usernam) {
+			user.username = usernam;
 			return this;
 		}
 		
@@ -95,6 +99,10 @@ public class User{
 		public Builder role(Role role) {
 			user.role = role;
 			return this;
-		}			
+		}
+		
+		public User build() {
+			return user;
+		}
 	}
 }

@@ -12,7 +12,8 @@ public class ConnectionPoolHolder {
             synchronized (ConnectionPoolHolder.class) {
                 if (dataSource == null) {
                     BasicDataSource ds = new BasicDataSource();
-                    ds.setUrl("jdbc:mysql://localhost:3306/servletdb");
+                    ds.setUrl("jdbc:mysql://localhost:3306/servletdb?serverTimezone=UTC");
+                    ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
                     ds.setUsername("root");
                     ds.setPassword("rootroot1991");
                     ds.setMinIdle(5);
