@@ -15,6 +15,11 @@
 		</div>
 		
 	<div class="container">
+	
+		<c:if test="${requestScope.message != null}">
+		<p><fmt:message key="${requestScope.message}" /></p>
+		</c:if>
+	
 		<form action="login" method="post">
         <div class="form-group row">
 	        <label class="col-sm-2 col-form-label"> <fmt:message key="username" />: </label>

@@ -34,6 +34,10 @@ public class Servlet extends HttpServlet {
         		new RegistrationCommand());
         commands.put("register",
         		new RegisterCommand());
+        commands.put("user_list",
+        		new UserListCommand());
+        commands.put("conferences",
+        		new ConferenceListCommand());
 	}
 	
 	@Override

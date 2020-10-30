@@ -7,6 +7,5 @@ import ua.conference.servletapp.model.entity.User;
 public interface UserDao extends GenericDao<User>{
 	
 	Optional<User> findByName(String name);
-	Optional<User> findByNameOrEmail(String name, String email);
 
 }

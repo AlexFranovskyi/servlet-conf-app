@@ -1,38 +1,51 @@
 package ua.conference.servletapp.controller.command;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import ua.conference.servletapp.model.entity.User;
+import ua.conference.servletapp.model.service.RegistrationService;
 
 public class LoginCommand implements Command {
+	private final static Logger logger = LogManager.getLogger(LoginCommand.class);
 
 	@Override
 	public String execute(HttpServletRequest request) {
-		String userName = request.getParameter("username");
+		
+		RegistrationService registrationService = new RegistrationService();
+		
+		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-		if( userName == null || userName.equals("") || password == null || password.equals("")  ){
-            System.out.println("Not full login data");
-            return "redirect:/" + request.getRequestURI();
+		if( username == null || username.equals("") || password == null || password.equals("")  ){            
+            request.setAttribute("message", "invalidData");
+            return "WEB-INF/views/login.jsp";
         }
-        System.out.println(userName + " " + password);
-        System.out.println("Yes! Login data are full");
-            //TODO: check login with DB
+		
+        Optional<User> opt = registrationService.findUserByUsername(username);
+        
+        if (!opt.isPresent()) {
+        	request.setAttribute("message", "userNotExists");
+            return "WEB-INF/views/login.jsp";
+        } 
+        User user = opt.get();
+        
+        if(!user.getPassword().equals(password)) {
+        	request.setAttribute("message", "invalidPassword");
+            return "WEB-INF/views/login.jsp";
+        }
 
-        if(CommandUtility.checkUserIsLogged(request, userName)){
+        if(CommandUtility.checkUserIsLogged(request, username)){
+        	logger.info("attempt to login under already logined account");
             return "/error.jsp";
         }
+        CommandUtility.setUserNameAndRole(request, user.getRole(), username);
+        logger.info("Successful logining");
+        return "redirect:/";
 
-        //TODO: refine this block
-        if (userName.equals("Admin")){
-            CommandUtility.setUserNameAndRole(request, User.Role.ADMIN, userName);
-            return "redirect:/servlet-conf-app";
-        } else if(userName.equals("User")) {
-            CommandUtility.setUserNameAndRole(request, User.Role.USER, userName);
-            return "redirect:/servlet-conf-app";
-        } else {
-            CommandUtility.setUserNameAndRole(request, User.Role.GUEST, userName);
-            return "redirect:/servlet-conf-app";
-        }
 	}
 }

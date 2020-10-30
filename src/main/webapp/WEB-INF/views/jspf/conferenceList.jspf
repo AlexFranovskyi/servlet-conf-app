@@ -1,0 +1,73 @@
+<%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
+
+<%-- <@sorting.sortForm path />  --%>
+	
+	<c:if test="${requestScope.page != null}">
+    	<div><h5><fmt:message key="listOfConferences" /></h5></div>
+	    	<table class="table table-striped">
+			  <thead>
+			    <tr>
+			      <c:if test="${sessionScope.role == 'ADMIN'}">
+			      	<th scope="col">Id</th>
+			      </c:if>
+			      <th scope="col"><fmt:message key="conferenceName" /></th>
+			      <th scope="col"><fmt:message key="dateAndTime" /></th>
+			      <th scope="col"><fmt:message key="location" /></th>
+			      <th scope="col"><fmt:message key="amountOfReports" /></th>
+			      <th scope="col"><fmt:message key="amountOfRegisteredVisitors" /></th>
+			      <th scope="col"><fmt:message key="amountOfArrivedVisitors" /></th>
+			      <th scope="col"></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			   			  
+	   			 <c:forEach var="conference" items="${requestScope.page}">
+			    	<tr>
+			    	  <c:if test="${sessionScope.role == 'ADMIN'}">
+				      	<th scope="row">${conference.id}</th>
+				      </c:if>
+				      <td>${conference.conferenceName}</td>
+				      <c:set var = "localDateTime" value = "${fn:replace(conference.localDateTime, 'T', ' ')}"/>
+				      <td>${localDateTime}</td>
+				      <td>${conference.location}</td>
+				      <td>${conference.reportCounter}</td>
+				      <td>${conference.visitorCounter}</td>
+				      <td>${conference.arrivedVisitorsAmount}</td>
+				      
+				      <td>
+				      <c:if test="${requestScope.showFutureEvents == 'yes'}">
+				        <c:if test="${sessionScope.role == 'USER'}">
+				        	<form action="visit_conference" method="post">
+				           			<input type="hidden" name="conferenceId" value="${conference.id}">
+				        			<div class="form-group my-2">
+						            <button type="submit" class="btn btn-primary"> <fmt:message key="visit" /> </button>
+					           		 </div>
+				        	</form>
+		        		</c:if>
+		        	  </c:if>
+		        	  
+		        		<c:if test="${sessionScope.role == 'SPEAKER' || sessionScope.role == 'ADMIN'}">
+			        		<form action="conference_details" method="get">
+			        			<div class="form-group my-2">
+			        			<input type="hidden" name="conferenceId" value="${conference.id}">
+					            <button type="submit" class="btn btn-primary"> <fmt:message key="details" /> </button>
+				           		 </div>
+			        		</form>
+		        		</c:if>
+		        		
+		        	  </td>
+				    </tr>
+   				  </c:forEach>
+   				  
+			   </tbody>
+			</table>
+<%--		<@pager.paginator path page /> --%>
+	</c:if>
+	
+	<c:if test="${requestScope.page != null}">
+		<c:if test="${requestScope.page.size() == 0}">
+			<div>
+				<b>No conferences to display</b>
+			</div>
+		</c:if>
+	</c:if>

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +13,17 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import ua.conference.servletapp.model.dao.UserDao;
+import ua.conference.servletapp.model.dao.mapper.UserMapper;
 import ua.conference.servletapp.model.entity.User;
 
 public class JdbcUserDao implements UserDao {
 	
-	final static Logger logger = LogManager.getLogger(JdbcUserDao.class);
+	private final static Logger logger = LogManager.getLogger(JdbcUserDao.class);
 	
 	public static final String SQL_INSERT_NEW_USER = "INSERT INTO usr (username, email, pass, usr_role) VALUES (?, ?, ?, ?)";
+	public static final String SQL_FIND_USER_BY_NAME = "SELECT * FROM usr WHERE username=?";
+	public static final String SQL_FIND_USER_BY_ID = "SELECT * FROM usr WHERE id=?";
+	public static final String SQL_FIND_ALL_USERS = "SELECT * FROM usr";
 	
 	
 	private Connection connection;
@@ -56,14 +61,46 @@ public class JdbcUserDao implements UserDao {
 
 	@Override
 	public Optional<User> findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultSet rs = null;
+		User user = null;
+
+		try (PreparedStatement pstmt = connection.prepareStatement(SQL_FIND_USER_BY_ID)) {
+			UserMapper userMapper = new UserMapper();
+
+			pstmt.setLong(1, id);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				user = userMapper.extractFromResultSet(rs);
+			}
+		} catch (SQLException ex) {
+			logger.error("Some problems while user extracting from DB", ex);
+		} finally {
+			closeAutoclosable(rs);
+		}
+		
+		return Optional.ofNullable(user);
 	}
 
 	@Override
 	public List<User> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ResultSet rs = null;
+		List<User> users = new ArrayList<>();
+		
+		try (Statement stmt = connection.createStatement()) {
+			rs = stmt.executeQuery(SQL_FIND_ALL_USERS);
+			
+			UserMapper userMapper = new UserMapper();
+
+			while (rs.next()) {
+				users.add(userMapper.extractFromResultSet(rs));
+			}
+		} catch (SQLException ex) {
+			logger.error("Some problems while user extracting from DB", ex);
+		} finally {
+			closeAutoclosable(rs);
+		}
+		return users;
 	}
 
 	@Override
@@ -90,14 +127,25 @@ public class JdbcUserDao implements UserDao {
 
 	@Override
 	public Optional<User> findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		ResultSet rs = null;
+		User user = null;
 
-	@Override
-	public Optional<User> findByNameOrEmail(String name, String email) {
-		// TODO Auto-generated method stub
-		return null;
+		try (PreparedStatement pstmt = connection.prepareStatement(SQL_FIND_USER_BY_NAME)) {
+			UserMapper userMapper = new UserMapper();
+
+			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				user = userMapper.extractFromResultSet(rs);
+			}
+		} catch (SQLException ex) {
+			logger.error("Some problems while user extracting from DB", ex);
+		} finally {
+			closeAutoclosable(rs);
+		}
+		
+		return Optional.ofNullable(user);
 	}
 	
 	private void closeAutoclosable(AutoCloseable ac) {

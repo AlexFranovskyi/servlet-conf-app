@@ -105,4 +105,17 @@ public class User{
 			return user;
 		}
 	}
+	
+	public String toString() {
+		return new StringBuilder(String.valueOf(id))
+				.append(' ')
+				.append(username)
+				.append(' ')
+				.append(email)
+				.append(' ')
+				.append(password)
+				.append(' ')
+				.append(role)
+				.toString();
+	}
 }

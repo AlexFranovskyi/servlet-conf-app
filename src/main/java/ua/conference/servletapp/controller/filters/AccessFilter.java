@@ -51,9 +51,9 @@ public class AccessFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {	
 		accessMap = new HashMap<>();
 		accessMap.put(User.Role.ADMIN, toList(filterConfig.getInitParameter("admin")));
-		accessMap.put(User.Role.GUEST, toList(filterConfig.getInitParameter("guest")));
-		
-		
+		accessMap.put(User.Role.SPEAKER, toList(filterConfig.getInitParameter("speaker")));
+		accessMap.put(User.Role.USER, toList(filterConfig.getInitParameter("user")));
+		accessMap.put(User.Role.GUEST, toList(filterConfig.getInitParameter("guest")));	
 	}
 	
 	private List<String> toList(String str) {

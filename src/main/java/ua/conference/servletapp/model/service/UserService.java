@@ -1,6 +1,7 @@
 package ua.conference.servletapp.model.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import ua.conference.servletapp.model.dao.DaoFactory;
 import ua.conference.servletapp.model.dao.UserDao;
@@ -18,9 +19,11 @@ public class UserService {
 		return list;
 	}
 	
-	public User findUserById(long id) {
-		UserDao dao = daoFactory.createUserDao();		
-		return dao.findById(id).get();
+	public Optional<User> findUserById(long id) {
+		UserDao dao = daoFactory.createUserDao();
+		Optional<User> opt = dao.findById(id);
+		dao.close();
+		return opt;
 	}
 
 }

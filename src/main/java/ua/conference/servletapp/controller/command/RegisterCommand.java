@@ -9,7 +9,7 @@ import ua.conference.servletapp.model.entity.User;
 import ua.conference.servletapp.model.service.RegistrationService;
 
 public class RegisterCommand implements Command {
-	final static Logger logger = LogManager.getLogger(RegisterCommand.class);
+	private final static Logger logger = LogManager.getLogger(RegisterCommand.class);
 	
 	RegistrationService registrationService = new RegistrationService();
 
@@ -35,7 +35,7 @@ public class RegisterCommand implements Command {
 			logger.info("Attempt to create account with duplicate email or username entry");
 			return "redirect:/authentication";
 		}
-		request.setAttribute("userExists", true);
+		request.setAttribute("message", "userAlreadyExists");
 		return "WEB-INF/views/registration.jsp";
 	}
 

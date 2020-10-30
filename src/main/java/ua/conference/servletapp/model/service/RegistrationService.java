@@ -10,11 +10,11 @@ public class RegistrationService {
 	
 	DaoFactory daoFactory = DaoFactory.getInstance();
 	
-	public User findUserByUsername(String username) {
+	public Optional<User> findUserByUsername(String username) {
 		UserDao dao = daoFactory.createUserDao();
-		User user = dao.findByName(username).get();
+		Optional<User> opt = dao.findByName(username);
 		dao.close();
-		return user;
+		return opt;
 	}
 	
 	public boolean createUser(User user) {

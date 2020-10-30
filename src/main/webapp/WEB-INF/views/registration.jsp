@@ -16,8 +16,8 @@
 		
 	<div class="container">
 	
-	<c:if test="${requestScope.userExists != null && requestScope.userExists == true }">
-	<p><fmt:message key="userAlreadyExists" /></p>
+	<c:if test="${requestScope.message != null}">
+	<p><fmt:message key="${requestScope.message}" /></p>
 	</c:if>
 	
 	<c:if test="${sessionScope.role == 'ADMIN'}">
