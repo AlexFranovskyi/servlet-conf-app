@@ -1,6 +1,6 @@
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 
-<%-- <@sorting.sortForm path />  --%>
+<%@ include file="sorting.jspf" %>
 	
 	<c:if test="${requestScope.page != null}">
     	<div><h5><fmt:message key="listOfConferences" /></h5></div>
@@ -61,7 +61,8 @@
    				  
 			   </tbody>
 			</table>
-<%--		<@pager.paginator path page /> --%>
+						
+	 	<%@ include file="paginator.jspf" %> 
 	</c:if>
 	
 	<c:if test="${requestScope.page != null}">

@@ -1,26 +1,17 @@
 package ua.conference.servletapp.model.service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ua.conference.servletapp.model.dao.ConferenceDao;
+import ua.conference.servletapp.model.dao.DaoFactory;
+import ua.conference.servletapp.model.entity.Conference;
 
-import ua.conference.springapp.Dto.ConferenceDto;
-import ua.conference.springapp.entity.Conference;
-import ua.conference.springapp.entity.User;
-import ua.conference.springapp.repository.ConferenceRepository;
-import ua.conference.springapp.support.EntityDtoConverter;
-
-@Service
 public class ConferenceService {
 	
-	@Autowired
-	private ConferenceRepository conferenceRepository;
+	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
+	/*
 	public Page<ConferenceDto> findAllConferencesDto(Pageable pageable){
 		return conferenceRepository.findAll(pageable).map(EntityDtoConverter::convertConferenceToDto);
 	}
@@ -29,8 +20,9 @@ public class ConferenceService {
 		Optional<Conference> conference = conferenceRepository.findById(id);
 		return EntityDtoConverter.convertConferenceToDto(conference.get());
 	}
+	 */
 	
-	public Page<ConferenceDto> findConferencesDtoSelectedByTime(String showFutureEvents, Pageable pageable){
+	public List<ConferenceDto> findConferencesDtoSelectedByTime(String showFutureEvents, Pageable pageable){
 		if ("yes".equals(showFutureEvents)) {
 			return conferenceRepository.findAllByLocalDateTimeAfter(LocalDateTime.now(), pageable)
 					.map(EntityDtoConverter::convertConferenceToDto);
@@ -39,16 +31,25 @@ public class ConferenceService {
 				.map(EntityDtoConverter::convertConferenceToDto);
 	}
 	
-	public Conference createConference(String name, LocalDateTime localDateTime, String location) {
+	public boolean createConference(String name, LocalDateTime localDateTime, String location) {
 		Conference newConference = Conference
 				.builder()
-				.name(name)
+				.conferenceName(name)
 				.localDateTime(localDateTime)
 				.location(location)
 				.build();
-		return conferenceRepository.save(newConference);
+		
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		boolean res = true;
+		
+		dao.create(newConference);
+		if (newConference.getId() == 0) {
+			res = false;
+		}
+		dao.close();
+		return res;
 	}
-	
+	/*
 	@Transactional
 	public Conference updateConference(long id, LocalDateTime localDateTime,
 			String location, int arrivedVisitorsAmount
@@ -70,5 +71,6 @@ public class ConferenceService {
 	public void deleteConference(long id) {
 		conferenceRepository.deleteById(id);
 	}
+	*/
 
 }

@@ -5,13 +5,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import ua.conference.servletapp.model.entity.User;
 import ua.conference.servletapp.model.service.RegistrationService;
 
 public class RegisterCommand implements Command {
 	private final static Logger logger = LogManager.getLogger(RegisterCommand.class);
 	
-	RegistrationService registrationService = new RegistrationService();
+	private RegistrationService registrationService = new RegistrationService();
 
 	@Override
 	public String execute(HttpServletRequest request) {
@@ -26,15 +25,10 @@ public class RegisterCommand implements Command {
             return "WEB-INF/views/registration.jsp";
         }
 		
-		User newUser = User.builder().username(name)
-				.email(email)
-				.password(pass)
-				.role(User.Role.valueOf(role))
-				.build();
-		if (registrationService.createUser(newUser)) {
-			logger.info("Attempt to create account with duplicate email or username entry");
+		if (registrationService.createUser(name, email, pass, role)) {
 			return "redirect:/authentication";
 		}
+		logger.info("Attempt to create account with duplicate email or username entry");
 		request.setAttribute("message", "userAlreadyExists");
 		return "WEB-INF/views/registration.jsp";
 	}

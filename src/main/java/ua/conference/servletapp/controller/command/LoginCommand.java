@@ -12,11 +12,10 @@ import ua.conference.servletapp.model.service.RegistrationService;
 
 public class LoginCommand implements Command {
 	private final static Logger logger = LogManager.getLogger(LoginCommand.class);
+	private RegistrationService registrationService = new RegistrationService();
 
 	@Override
 	public String execute(HttpServletRequest request) {
-		
-		RegistrationService registrationService = new RegistrationService();
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");

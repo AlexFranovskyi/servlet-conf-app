@@ -38,6 +38,8 @@ public class Servlet extends HttpServlet {
         		new UserListCommand());
         commands.put("conferences",
         		new ConferenceListCommand());
+        commands.put("post_conference",
+        		new CreateConferenceCommand());
 	}
 	
 	@Override

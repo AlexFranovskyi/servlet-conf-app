@@ -17,12 +17,18 @@ public class RegistrationService {
 		return opt;
 	}
 	
-	public boolean createUser(User user) {
+	public boolean createUser(String name, String email, String pass, String role) {
 		UserDao dao = daoFactory.createUserDao();
 		boolean res = true;
 		
-		dao.create(user);
-		if (user.getId() == 0) {
+		User newUser = User.builder().username(name)
+				.email(email)
+				.password(pass)
+				.role(User.Role.valueOf(role))
+				.build();
+		
+		dao.create(newUser);
+		if (newUser.getId() == 0) {
 			res = false;
 		}
 		dao.close();

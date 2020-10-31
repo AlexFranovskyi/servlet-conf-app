@@ -1,0 +1,27 @@
+<c:set var="sort" value="${requestScope.sort}" />
+   
+<div class="form-row mt-2">
+	<div class="form-group">
+	    <form method="get" action="conferences" class="form-inline">
+	    	<button type="submit" class="btn btn-primary mr-5"> <fmt:message key="showConferences" /> </button>
+	    	  
+	        <label class="mr-2 ml-4"> <fmt:message key="sortOptions" />:</label>
+	        
+	        <select name="sort" class="custom-select my-1 mr-sm-2">
+	    		<option value="localDateTime,DESC" <c:if test="${sort == 'localDateTime,DESC'}"> selected </c:if>> <fmt:message key="fromLatestToEarliest" /></option>
+	    		<option value="localDateTime,ASC" <c:if test="${sort == 'localDateTime,ASC'}"> selected </c:if>> <fmt:message key="fromEarliestToLatest" /></option>
+	    		
+	    		<option value="reportCounter,DESC" <c:if test="${sort == 'reportCounter,DESC'}"> selected </c:if>> <fmt:message key="fromUtmostReportsToLeast" /></option>
+	    		<option value="reportCounter,ASC" <c:if test="${sort == 'reportCounter,ASC'}"> selected </c:if>> <fmt:message key="fromLeastReportsToUtmost" /></option>
+	    		
+	    		<option value="visitorCounter,DESC" <c:if test="${sort == 'visitorCounter,DESC'}"> selected </c:if>> <fmt:message key="fromUtmostRegisteredVisitorsToLeast" /></option>
+	    		<option value="visitorCounter,ASC" <c:if test="${sort == 'visitorCounter,ASC'}"> selected </c:if>> <fmt:message key="fromLeastRegisteredVisitorsToUtmost" /></option>
+			</select>
+	         			
+			<select name="showFutureEvents" class="custom-select my-1 mr-sm-2">
+	    		<option value="yes" <c:if test="${requestScope.showFutureEvents == 'yes'}"> selected </c:if>> <fmt:message key="futureEvents" /> </option>
+	    		<option value="no" <c:if test="${requestScope.showFutureEvents == 'no'}"> selected </c:if>> <fmt:message key="pastEvents" /> </option>
+	    	</select>
+	    </form>
+	</div>
+</div>
