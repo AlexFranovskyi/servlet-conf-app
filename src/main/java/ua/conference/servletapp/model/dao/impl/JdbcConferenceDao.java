@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +70,7 @@ public class JdbcConferenceDao implements ConferenceDao {
 			+ "FROM conference as c  where c.local_date_time < now() order by ? limit ? offset ?";
 	
 	public static final String SQL_ADD_VISITOR = "insert into conference_has_visitor (conference_id, user_id) values (?, ?)";
+	public static final String SQL_UPDATE_CONFERENCE = "UPDATE conference SET local_date_time = ?, location = ?, arrived_visitors_amount = ? where id = ?";
 
 	public JdbcConferenceDao(Connection connection) {
 		this.connection = connection;
@@ -202,6 +204,30 @@ public class JdbcConferenceDao implements ConferenceDao {
 		logger.info("Conference with admin-visitor is sussfully created");
 		return result;
 	}
+	
+	public boolean updateConference(long id, LocalDateTime localDateTime, 
+			String location, int arrivedVisitorsAmount) {
+			ResultSet rs = null;
+			boolean result = false;
+
+		try (PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_CONFERENCE)) {
+
+			int k = 1;
+			pstmt.setString(k++, localDateTime.toString());
+			pstmt.setString(k++, location);
+			pstmt.setInt(k++, arrivedVisitorsAmount);
+			pstmt.setLong(k++, id);
+
+			if (pstmt.executeUpdate() > 0) {
+				result = true;
+			}
+		} catch (SQLException ex) {
+			logger.error("Some problems while conference updating", ex);
+		} finally {
+			closeAutoclosable(rs);
+		}
+		return result;
+	}
 
 	@Override
 	public Optional<Conference> findById(long id) {
@@ -213,8 +239,6 @@ public class JdbcConferenceDao implements ConferenceDao {
 		ResultSet rs = null;
 		
 		try (PreparedStatement pstmt = connection.prepareStatement(SQL_FIND_CONFERENCE_BY_ID)) {
-			
-			
 			pstmt.setLong(1, id);
 
 			rs = pstmt.executeQuery();

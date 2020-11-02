@@ -76,18 +76,17 @@ public class ConferenceService {
 		dao.close();
 		return res;
 	}
-	/*
-	@Transactional
-	public Conference updateConference(long id, LocalDateTime localDateTime,
+
+	public boolean updateConference(long id, LocalDateTime localDateTime,
 			String location, int arrivedVisitorsAmount
 			) {
-		Conference newConference = conferenceRepository.findById(id).get();
-		newConference.setLocalDateTime(localDateTime);
-		newConference.setLocation(location);
-		newConference.setArrivedVisitorsAmount(arrivedVisitorsAmount);
-		return conferenceRepository.save(newConference);
+				
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		boolean res = dao.updateConference(id, localDateTime, location, arrivedVisitorsAmount);
+		dao.close();
+		
+		return res;
 	}
-	*/
 	
 	public boolean addVisitor(long conferenceId, long userId) {
 		ConferenceDao dao = daoFactory.createConferenceDao();

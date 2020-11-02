@@ -44,6 +44,8 @@ public class Servlet extends HttpServlet {
         		new VisitConferenceCommand());
         commands.put("conference_details",
         		new ConferenceDetailsCommand());
+        commands.put("update_conference",
+        		new UpdateConferenceCommand());
         
 	}
 	

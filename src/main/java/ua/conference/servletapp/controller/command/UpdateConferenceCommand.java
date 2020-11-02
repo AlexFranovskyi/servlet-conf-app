@@ -12,23 +12,23 @@ import org.apache.log4j.Logger;
 import ua.conference.servletapp.model.service.ConferenceService;
 import ua.conference.servletapp.support.Constants;
 
-public class CreateConferenceCommand implements Command {
-	private final static Logger logger = LogManager.getLogger(CreateConferenceCommand.class);
+public class UpdateConferenceCommand implements Command {
+	private final static Logger logger = LogManager.getLogger(UpdateConferenceCommand.class);
 	private ConferenceService conferenceService = new ConferenceService();
-	
+
 	@Override
 	public String execute(HttpServletRequest request) {
+		long conferenceId = Long.parseLong(request.getParameter("conferenceId"));
 		
-		String name = request.getParameter("name");
-		String localDateTimeString = request.getParameter("localDateTime");
 		String location = request.getParameter("location");
-		long adminId = (long)request.getSession().getAttribute("userId");
+		String localDateTimeString = request.getParameter("localDateTime");
+		int arrivedVisitorsAmount = Integer.parseInt(request.getParameter("arrivedVisitorsAmount"));
 		
-		if( name == null || name.equals("") || localDateTimeString == null || localDateTimeString.equals("") ||
+		if( arrivedVisitorsAmount < 0 || localDateTimeString == null || localDateTimeString.equals("") ||
 				location == null || location.equals("")){
 			logger.info("Invalid conference registration information");
 			request.setAttribute("message", "invalidData");
-            return "WEB-INF/views/conferences.jsp";
+            return "WEB-INF/views/conferenceDetails.jsp";
         }
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.LOCAL_TIME_DATE_PATTERN);
@@ -39,17 +39,16 @@ public class CreateConferenceCommand implements Command {
 		} catch (DateTimeParseException ex) {
 			logger.info("Invalid dataTime format in conference input registration information", ex);
 			request.setAttribute("message", "invalidData");
-            return "WEB-INF/views/conferences.jsp";
+            return "WEB-INF/views/conferenceDetails.jsp";
 		}
 		
-		if (conferenceService.createConferenceAndVisit(name, localDateTime, location, adminId)) {
-			logger.info("New conference is created");
+		if (conferenceService.updateConference(conferenceId, localDateTime, location, arrivedVisitorsAmount)) {
+			logger.info("Conference is successfully updated");
 			return "redirect:/conferences";
 		}
-		
-		logger.info("Something went wrong while conference creation");
-		request.setAttribute("message", "failedOperation");
-		return "WEB-INF/views/conferences.jsp";
+			logger.info("Conference updating is failed");
+			request.setAttribute("message", "failedOperation");
+		return "WEB-INF/views/conferenceDetails.jsp";
 	}
 
 }
