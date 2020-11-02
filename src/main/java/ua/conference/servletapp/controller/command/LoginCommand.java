@@ -42,6 +42,7 @@ public class LoginCommand implements Command {
         	logger.info("attempt to login under already logined account");
             return "/error.jsp";
         }
+        request.getSession().setAttribute("userId", user.getId());
         CommandUtility.setUserNameAndRole(request, user.getRole(), username);
         logger.info("Successful logining");
         return "redirect:/";

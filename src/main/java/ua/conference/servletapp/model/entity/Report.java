@@ -3,13 +3,11 @@ package ua.conference.servletapp.model.entity;
 public class Report {
 
 	private long id;
-
 	private String name;
-
-	private String conferenceName;
-
-	private String speakerName;
-
+	
+	private Conference conference;
+	private User speaker;
+	
 	private boolean approved;
 	
 	public Report() {
@@ -19,15 +17,15 @@ public class Report {
 		this.name = name;
 	}
 	
-	public Report(String name, String conferenceName) {
+	public Report(String name, Conference conference) {
 		this.name = name;
-		this.conferenceName = conferenceName;
+		this.conference = conference;
 	}
 
-	public Report(String name, String conferenceName, String speakerName) {
+	public Report(String name, Conference conference, User speaker) {
 		this.name = name;
-		this.conferenceName = conferenceName;
-		this.speakerName = speakerName;
+		this.conference = conference;
+		this.speaker = speaker;
 	}
 
 	public long getId() {
@@ -46,20 +44,20 @@ public class Report {
 		this.name = name;
 	}
 
-	public String getConferenceName() {
-		return conferenceName;
+	public Conference getConference() {
+		return conference;
 	}
 
-	public void setConferenceName(String conferenceName) {
-		this.conferenceName = conferenceName;
+	public void setConference(Conference conference) {
+		this.conference = conference;
 	}
 
-	public String getSpeakerName() {
-		return speakerName;
+	public User getSpeaker() {
+		return speaker;
 	}
 
-	public void setSpeakerName(String speakerName) {
-		this.speakerName = speakerName;
+	public void setSpeaker(User speaker) {
+		this.speaker = speaker;
 	}
 
 	public boolean isApproved() {
@@ -91,13 +89,13 @@ public class Report {
 			return this;
 		}
 		
-		public Builder conferenceName(String conferenceName) {
-			report.conferenceName = conferenceName;
+		public Builder conference(Conference conference) {
+			report.conference = conference;
 			return this;
 		}
 		
-		public Builder speakerName(String speakerName) {
-			report.speakerName = speakerName;
+		public Builder speaker(User speaker) {
+			report.speaker = speaker;
 			return this;
 		}
 		

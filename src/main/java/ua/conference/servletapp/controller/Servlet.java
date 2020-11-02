@@ -40,6 +40,9 @@ public class Servlet extends HttpServlet {
         		new ConferenceListCommand());
         commands.put("post_conference",
         		new CreateConferenceCommand());
+        commands.put("visit_conference",
+        		new VisitConferenceCommand());
+        
 	}
 	
 	@Override

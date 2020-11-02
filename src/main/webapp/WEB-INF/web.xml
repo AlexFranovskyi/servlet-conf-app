@@ -57,7 +57,7 @@
 		</init-param>
 		<init-param>
 			<param-name>user</param-name>
-			<param-value>user_list, logout, conferences</param-value>
+			<param-value>user_list, logout, conferences, visit_conference</param-value>
 		</init-param>
 		<init-param>
 			<param-name>guest</param-name>

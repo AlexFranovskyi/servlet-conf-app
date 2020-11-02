@@ -1,19 +1,13 @@
-package ua.conference.servletapp.model.entity;
+package ua.conference.servletapp.model.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Conference {
-	
+public class ConferenceDto {
 	private long id;
 	private String conferenceName;
-
+	
 	private LocalDateTime localDateTime;
 	private String location;
-	
-	private List<User> visitors = new ArrayList<>();
-	private List<Report> reports = new ArrayList<>();
 	
 	private int visitorCounter;
 	private int reportCounter;
@@ -52,22 +46,6 @@ public class Conference {
 		this.location = location;
 	}
 
-	public List<User> getVisitors() {
-		return visitors;
-	}
-
-	public void setVisitors(List<User> visitors) {
-		this.visitors = visitors;
-	}
-
-	public List<Report> getReports() {
-		return reports;
-	}
-
-	public void setReports(List<Report> reports) {
-		this.reports = reports;
-	}
-
 	public int getVisitorCounter() {
 		return visitorCounter;
 	}
@@ -97,50 +75,52 @@ public class Conference {
 	}
 	
 	public static class Builder{
-		private Conference conference;
+		private ConferenceDto conferenceDto;
 		
 		private Builder() {
-			conference = new Conference();
+			conferenceDto = new ConferenceDto();
 		}
 		
 		public Builder id(long id) {
-			conference.id = id;
+			conferenceDto.id = id;
 			return this;
 		}
 		
 		public Builder conferenceName(String name) {
-			conference.conferenceName = name;
+			conferenceDto.conferenceName = name;
 			return this;
 		}
 		
 		public Builder localDateTime(LocalDateTime localDateTime) {
-			conference.localDateTime = localDateTime;
+			conferenceDto.localDateTime = localDateTime;
 			return this;
 		}
 		
 		public Builder location(String location) {
-			conference.location = location;
+			conferenceDto.location = location;
 			return this;
 		}
 		
 		public Builder visitorCounter(int visitorCounter) {
-			conference.visitorCounter = visitorCounter;
+			conferenceDto.visitorCounter = visitorCounter;
 			return this;
 		}
 		
 		public Builder reportCounter(int reportCounter) {
-			conference.reportCounter = reportCounter;
+			conferenceDto.reportCounter = reportCounter;
 			return this;
 		}
 		
 		public Builder arrivedVisitorsAmount(int arrivedVisitorsAmount) {
-			conference.arrivedVisitorsAmount = arrivedVisitorsAmount;
+			conferenceDto.arrivedVisitorsAmount = arrivedVisitorsAmount;
 			return this;
 		}
 		
-		public Conference build() {
-			return conference;
+		public ConferenceDto build() {
+			return conferenceDto;
 		}
 	}
-
+	
+	
+	
 }

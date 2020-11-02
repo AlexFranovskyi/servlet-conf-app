@@ -1,34 +1,44 @@
 package ua.conference.servletapp.model.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import ua.conference.servletapp.model.dao.ConferenceDao;
 import ua.conference.servletapp.model.dao.DaoFactory;
+import ua.conference.servletapp.model.dto.ConferenceDto;
 import ua.conference.servletapp.model.entity.Conference;
+import ua.conference.servletapp.support.Constants;
+import ua.conference.servletapp.support.Page;
 
 public class ConferenceService {
 	
 	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
 	/*
-	public Page<ConferenceDto> findAllConferencesDto(Pageable pageable){
+	public Page<ConferenceDtoMapper> findAllConferencesDto(Pageable pageable){
 		return conferenceRepository.findAll(pageable).map(EntityDtoConverter::convertConferenceToDto);
 	}
 	
-	public ConferenceDto findConferenceDtoById(long id) {
+	public ConferenceDtoMapper findConferenceDtoById(long id) {
 		Optional<Conference> conference = conferenceRepository.findById(id);
 		return EntityDtoConverter.convertConferenceToDto(conference.get());
 	}
 	 */
 	
-	public List<ConferenceDto> findConferencesDtoSelectedByTime(String showFutureEvents, Pageable pageable){
-		if ("yes".equals(showFutureEvents)) {
-			return conferenceRepository.findAllByLocalDateTimeAfter(LocalDateTime.now(), pageable)
-					.map(EntityDtoConverter::convertConferenceToDto);
+	public Page<ConferenceDto> findConferencesDtoSelectedByTime(String showFutureEvents, int pageNumber, String sort){
+		int begin = pageNumber * Constants.PAGE_SIZE;
+		int end = (pageNumber + 1) * Constants.PAGE_SIZE;
+		
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		
+		boolean future = true;
+		if ("no".contentEquals(showFutureEvents)) {
+			future = false;
 		}
-		return conferenceRepository.findAllByLocalDateTimeBefore(LocalDateTime.now(), pageable)
-				.map(EntityDtoConverter::convertConferenceToDto);
+		Page<ConferenceDto> page = dao.findAllByLocalDateTimeSorted(begin, end, future, sort);
+		
+				
+		dao.close();
+		return page;
 	}
 	
 	public boolean createConference(String name, LocalDateTime localDateTime, String location) {

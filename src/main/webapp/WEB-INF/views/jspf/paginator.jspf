@@ -1,6 +1,10 @@
 <%@ taglib prefix="mytag" uri="/WEB-INF/tld/mytaglib.tld" %>
 
-<mytag:pagesNaming var="pageNumbers" totalPages="${requestScope.totalPages}" pageNumber="${requestScope.pageNumber}"/>
+<c:set var="totalPages" value="${requestScope.page.getTotalPages()}" />
+<c:set var="pageNumber" value="${requestScope.page.getPageNumber()}" />
+<c:set var="sort" value="${requestScope.page.getSort()}" />
+
+<mytag:pagesNaming var="pageNumbers" totalPages="${totalPages}" pageNumber="${pageNumber}"/>
 		
 	<div>
 		<ul class="pagination">

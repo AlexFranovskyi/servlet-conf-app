@@ -67,6 +67,10 @@ public class UserDto {
 			userDto.role = role;
 			return this;
 		}
+		
+		public UserDto build() {
+			return userDto;
+		}
 	}
 
 }
