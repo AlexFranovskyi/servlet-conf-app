@@ -1,0 +1,82 @@
+<%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
+
+<c:set var="conference" value="${requestScope.conference}" />
+
+<div><fmt:message key="conferenceDetails" /></div>
+	    	<table class="table">
+			  <thead>
+			    <tr>
+			     <c:if test="${sessionScope.role == 'ADMIN'}">
+			      	<th scope="col">Id</th>
+			      </c:if>
+			      <th scope="col"><fmt:message key="conferenceName" /></th>
+			      <th scope="col"><fmt:message key="dateAndTime" /></th>
+			      <th scope="col"><fmt:message key="location" /></th>
+			      <th scope="col"><fmt:message key="amountOfReports" /></th>
+			      <th scope="col"><fmt:message key="amountOfRegisteredVisitors" /></th>
+			      <th scope="col"><fmt:message key="amountOfArrivedVisitors" /></th>
+			      <th scope="col"></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    	<tr>
+			    	  <c:if test="${sessionScope.role == 'ADMIN'}">
+				      	<th scope="row">${conference.id}</th>
+				      </c:if>
+				      <td>${conference.conferenceName}</td>
+				      <c:set var = "localDateTime" value = "${fn:replace(conference.localDateTime, 'T', ' ')}"/>
+				      <td>${localDateTime}</td>
+				      <td>${conference.location}</td>
+				      <td>${conference.reportCounter}</td>
+				      <td>${conference.visitorCounter}</td>
+				      <td>${conference.arrivedVisitorsAmount}</td>
+				      
+				      <td>
+				      	<form action="reports" method="get">
+				      		<input type="hidden" name="conferenceId" value="${conference.id}">
+		        			<div class="form-group my-2">
+				            	<button type="submit" class="btn btn-primary"> <fmt:message key="reports" /></button>
+			           		</div>
+		        		</form>
+				      </td>
+				      
+				    </tr>
+			   </tbody>
+			</table>
+	<c:if test="${sessionScope.role == 'ADMIN'}">
+		
+		<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+	  	<fmt:message key="updateData" />
+	  	</a>
+		<div class="collapse" id="collapseExample">
+			<div class="form-group mt-3">
+		    	<form method="post" action="/update_conference">
+		    		<input type="hidden" name="conferenceId" value="${conference.id}">
+		    		
+		            <div class="form-group my-2 w-50">
+		            	<input type="text" class="form-control" name="localDateTime" required 
+		            	value = "${fn:replace(conference.localDateTime, 'T', ' ')}" placeholder="yyyy-mm-dd hh:mm"/>
+		    		</div>
+		    		<div class="form-group my-2 w-50">
+		            	<input type="text" class="form-control" name="location" value = "${conference.location}"
+		            	required placeholder="<fmt:message key='location' />"/>
+		    		</div>
+		    		<div class="form-group my-2 w-50">
+			           	<input type="text" class="form-control" name="arrivedVisitorsAmount" 
+			           	value = "${conference.arrivedVisitorsAmount}" placeholder="<fmt:message key='amountOfArrivedVisitors' />"/>
+			    	</div>	       
+		            <div class="form-group my-2">
+			            <button type="submit" class="btn btn-primary"><fmt:message key="updateConference" /></button>
+		            </div>
+		        </form>
+		    </div>
+		</div>
+		
+       		<form action="/delete" method="post">
+       			<div class="form-group my-2">
+       				<input type="hidden" name="conferenceId" value = ${conference.id}>
+	            	<button type="submit" class="btn btn-danger"><fmt:message key="delete" /></button>
+           		</div>
+       		</form>
+       		
+	</c:if>

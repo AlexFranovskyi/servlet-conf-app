@@ -6,5 +6,7 @@ import ua.conference.servletapp.support.Page;
 
 public interface ConferenceDao extends GenericDao<Conference>{
 	Page<ConferenceDto> findAllByLocalDateTimeSorted(int begin, int end, boolean future, String sort);
+	boolean addVisitor(long conferenceId, long userId);
+	boolean createAndVisit(Conference conference, long userId);
 
 }

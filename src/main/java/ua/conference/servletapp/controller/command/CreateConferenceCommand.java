@@ -22,6 +22,7 @@ public class CreateConferenceCommand implements Command {
 		String name = request.getParameter("name");
 		String localDateTimeString = request.getParameter("localDateTime");
 		String location = request.getParameter("location");
+		long adminId = (long)request.getSession().getAttribute("userId");
 		
 		if( name == null || name.equals("") || localDateTimeString == null || localDateTimeString.equals("") ||
 				location == null || location.equals("")){
@@ -42,7 +43,7 @@ public class CreateConferenceCommand implements Command {
             return "WEB-INF/views/conferences.jsp";
 		}
 		
-		if (conferenceService.createConference(name, localDateTime, location)) {
+		if (conferenceService.createConferenceAndVisit(name, localDateTime, location, adminId)) {
 			logger.info("New conference is created");
 			return "redirect:/conferences";
 		}

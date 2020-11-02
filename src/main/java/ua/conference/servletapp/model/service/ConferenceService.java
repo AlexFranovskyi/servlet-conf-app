@@ -1,28 +1,29 @@
 package ua.conference.servletapp.model.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import ua.conference.servletapp.model.dao.ConferenceDao;
 import ua.conference.servletapp.model.dao.DaoFactory;
 import ua.conference.servletapp.model.dto.ConferenceDto;
 import ua.conference.servletapp.model.entity.Conference;
 import ua.conference.servletapp.support.Constants;
+import ua.conference.servletapp.support.EntityDtoConverter;
 import ua.conference.servletapp.support.Page;
 
 public class ConferenceService {
 	
 	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
-	/*
-	public Page<ConferenceDtoMapper> findAllConferencesDto(Pageable pageable){
-		return conferenceRepository.findAll(pageable).map(EntityDtoConverter::convertConferenceToDto);
-	}
 	
-	public ConferenceDtoMapper findConferenceDtoById(long id) {
-		Optional<Conference> conference = conferenceRepository.findById(id);
-		return EntityDtoConverter.convertConferenceToDto(conference.get());
+		
+	public Optional<ConferenceDto> findConferenceDtoById(long id) {
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		Optional<Conference> conferenceOpt = dao.findById(id);
+		dao.close();
+		return conferenceOpt.map(EntityDtoConverter::convertConferenceToDto);
 	}
-	 */
+	 
 	
 	public Page<ConferenceDto> findConferencesDtoSelectedByTime(String showFutureEvents, int pageNumber, String sort){
 		int begin = pageNumber * Constants.PAGE_SIZE;
@@ -59,6 +60,22 @@ public class ConferenceService {
 		dao.close();
 		return res;
 	}
+	
+	public boolean createConferenceAndVisit(String name, LocalDateTime localDateTime, String location, long adminId) {
+		Conference newConference = Conference
+				.builder()
+				.conferenceName(name)
+				.localDateTime(localDateTime)
+				.location(location)
+				.build();
+		
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		boolean res = true;
+		
+		res = dao.createAndVisit(newConference, adminId);
+		dao.close();
+		return res;
+	}
 	/*
 	@Transactional
 	public Conference updateConference(long id, LocalDateTime localDateTime,
@@ -70,14 +87,16 @@ public class ConferenceService {
 		newConference.setArrivedVisitorsAmount(arrivedVisitorsAmount);
 		return conferenceRepository.save(newConference);
 	}
+	*/
 	
-	@Transactional
-	public Conference addVisitor(long conferenceId, User user) {
-		Conference conference = conferenceRepository.findById(conferenceId).get();
-		conference.getVisitors().add(user);
-		return conferenceRepository.save(conference);
+	public boolean addVisitor(long conferenceId, long userId) {
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		boolean result = dao.addVisitor(conferenceId, userId);
+		dao.close();
+		return result;
 	}
 	
+	/*
 	public void deleteConference(long id) {
 		conferenceRepository.deleteById(id);
 	}

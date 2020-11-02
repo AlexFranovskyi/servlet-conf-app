@@ -49,11 +49,11 @@
 		<filter-class>ua.conference.servletapp.controller.filters.AccessFilter</filter-class>
 		<init-param>
 			<param-name>admin</param-name>
-			<param-value>user_list, logout, conferences, post_conference</param-value>
+			<param-value>user_list, logout, conferences, post_conference, conference_details</param-value>
 		</init-param>
 		<init-param>
 			<param-name>speaker</param-name>
-			<param-value>user_list, logout, conferences</param-value>
+			<param-value>user_list, logout, conferences, conference_details</param-value>
 		</init-param>
 		<init-param>
 			<param-name>user</param-name>
