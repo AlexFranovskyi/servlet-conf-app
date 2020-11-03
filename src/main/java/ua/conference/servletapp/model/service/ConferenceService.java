@@ -14,8 +14,6 @@ import ua.conference.servletapp.support.Page;
 public class ConferenceService {
 	
 	private DaoFactory daoFactory = DaoFactory.getInstance();
-	
-	
 		
 	public Optional<ConferenceDto> findConferenceDtoById(long id) {
 		ConferenceDao dao = daoFactory.createConferenceDao();
@@ -24,7 +22,6 @@ public class ConferenceService {
 		return conferenceOpt.map(EntityDtoConverter::convertConferenceToDto);
 	}
 	 
-	
 	public Page<ConferenceDto> findConferencesDtoSelectedByTime(String showFutureEvents, int pageNumber, String sort){
 		int begin = pageNumber * Constants.PAGE_SIZE;
 		int end = (pageNumber + 1) * Constants.PAGE_SIZE;
@@ -36,8 +33,7 @@ public class ConferenceService {
 			future = false;
 		}
 		Page<ConferenceDto> page = dao.findAllByLocalDateTimeSorted(begin, end, future, sort);
-		
-				
+			
 		dao.close();
 		return page;
 	}
@@ -95,10 +91,16 @@ public class ConferenceService {
 		return result;
 	}
 	
-	/*
-	public void deleteConference(long id) {
-		conferenceRepository.deleteById(id);
+	
+	public boolean deleteConference(long id) {
+		boolean result = false;	
+		ConferenceDao dao = daoFactory.createConferenceDao();
+		
+		if (dao.delete(id)) {
+			result = true;
+		}
+		dao.close();
+		return result;
 	}
-	*/
-
+	
 }

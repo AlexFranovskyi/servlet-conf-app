@@ -9,8 +9,8 @@
 	        <label class="mr-2 ml-4"> <fmt:message key="sortOptions" />:</label>
 	        
 	        <select name="sort" class="custom-select my-1 mr-sm-2">
-	    		<option value="localDateTime DESC" <c:if test="${sort == 'localDateTime DESC'}"> selected </c:if>> <fmt:message key="fromLatestToEarliest" /></option>
-	    		<option value="localDateTime ASC" <c:if test="${sort == 'localDateTime ASC'}"> selected </c:if>> <fmt:message key="fromEarliestToLatest" /></option>
+	    		<option value="local_date_time DESC" <c:if test="${sort == 'local_date_Time DESC'}"> selected </c:if>> <fmt:message key="fromLatestToEarliest" /></option>
+	    		<option value="local_date_time ASC" <c:if test="${sort == 'local_date_time ASC'}"> selected </c:if>> <fmt:message key="fromEarliestToLatest" /></option>
 	    		
 	    		<option value="reportCounter DESC" <c:if test="${sort == 'reportCounter DESC'}"> selected </c:if>> <fmt:message key="fromUtmostReportsToLeast" /></option>
 	    		<option value="reportCounter ASC" <c:if test="${sort == 'reportCounter ASC'}"> selected </c:if>> <fmt:message key="fromLeastReportsToUtmost" /></option>

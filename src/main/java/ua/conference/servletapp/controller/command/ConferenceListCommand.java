@@ -19,7 +19,7 @@ public class ConferenceListCommand implements Command {
 		
 		String sort = request.getParameter("sort");
 		if (sort == null) {
-			sort = "localDateTime DESC";
+			sort = "local_date_time DESC";
 		}
 		
 		String showFutureEvents = request.getParameter("showFutureEvents");

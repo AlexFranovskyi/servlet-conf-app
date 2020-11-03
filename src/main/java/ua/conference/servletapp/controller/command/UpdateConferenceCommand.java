@@ -19,35 +19,35 @@ public class UpdateConferenceCommand implements Command {
 	@Override
 	public String execute(HttpServletRequest request) {
 		long conferenceId = Long.parseLong(request.getParameter("conferenceId"));
-		
+
 		String location = request.getParameter("location");
 		String localDateTimeString = request.getParameter("localDateTime");
 		int arrivedVisitorsAmount = Integer.parseInt(request.getParameter("arrivedVisitorsAmount"));
-		
-		if( arrivedVisitorsAmount < 0 || localDateTimeString == null || localDateTimeString.equals("") ||
-				location == null || location.equals("")){
+
+		if (arrivedVisitorsAmount < 0 || localDateTimeString == null || localDateTimeString.equals("")
+				|| location == null || location.equals("")) {
 			logger.info("Invalid conference registration information");
 			request.setAttribute("message", "invalidData");
-            return "WEB-INF/views/conferenceDetails.jsp";
-        }
-		
+			return "WEB-INF/views/conferenceDetails.jsp";
+		}
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.LOCAL_TIME_DATE_PATTERN);
 		LocalDateTime localDateTime = null;
-		
+
 		try {
 			localDateTime = LocalDateTime.parse(localDateTimeString, formatter);
 		} catch (DateTimeParseException ex) {
 			logger.info("Invalid dataTime format in conference input registration information", ex);
 			request.setAttribute("message", "invalidData");
-            return "WEB-INF/views/conferenceDetails.jsp";
+			return "WEB-INF/views/conferenceDetails.jsp";
 		}
-		
+
 		if (conferenceService.updateConference(conferenceId, localDateTime, location, arrivedVisitorsAmount)) {
 			logger.info("Conference is successfully updated");
 			return "redirect:/conferences";
 		}
-			logger.info("Conference updating is failed");
-			request.setAttribute("message", "failedOperation");
+		logger.info("Conference updating is failed");
+		request.setAttribute("message", "failedOperation");
 		return "WEB-INF/views/conferenceDetails.jsp";
 	}
 

@@ -72,7 +72,7 @@
 		    </div>
 		</div>
 		
-       		<form action="/delete" method="post">
+       		<form action="delete_conference" method="post">
        			<div class="form-group my-2">
        				<input type="hidden" name="conferenceId" value = ${conference.id}>
 	            	<button type="submit" class="btn btn-danger"><fmt:message key="delete" /></button>

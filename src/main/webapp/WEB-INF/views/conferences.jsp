@@ -5,6 +5,7 @@
 
 <%@ page session="true" %>
 
+<c:set var="path" value="conferences" />
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="messages"/>
 

@@ -25,11 +25,10 @@
 		    		</c:when>
     				<c:otherwise>
 			    		<li class="page-item">
-			      			<a class="page-link" href="conferences?pageNumber=${p-1}&sort=${sort}&showFutureEvents=${showFutureEvents}" tabindex="-1">${p}</a>
+			      			<a class="page-link" href="${path}?pageNumber=${p-1}&sort=${sort}&showFutureEvents=${showFutureEvents}<c:if test="${confId != null}">&conferenceId=${confId}</c:if>" tabindex="-1">${p}</a>
 			    		</li>   
 		    	 	</c:otherwise>	
     			</c:choose>
     		</c:forEach>
     	</ul>
 	</div>
-	

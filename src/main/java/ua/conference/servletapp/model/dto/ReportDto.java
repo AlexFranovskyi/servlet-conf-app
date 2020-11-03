@@ -1,8 +1,5 @@
 package ua.conference.servletapp.model.dto;
 
-import java.util.Optional;
-
-import ua.conference.servletapp.model.entity.Conference;
 import ua.conference.servletapp.model.entity.User;
 
 public class ReportDto {
@@ -73,15 +70,17 @@ public class ReportDto {
 			return this;
 		}
 		
-		public Builder speaker(User speaker) {
-			newReportDto.speakerName = Optional.ofNullable(speaker)
-					.map(user -> user.getUsername()).orElse("");
+		public Builder speakerName(String speakerName) {
+			if (speakerName == null) {
+				newReportDto.speakerName = "";
+			} else {				
+				newReportDto.speakerName = speakerName;				
+			}
 			return this;
 		}
 		
-		public Builder conferenceName(Conference conference) {
-			newReportDto.conferenceName = Optional.ofNullable(conference)
-					.map(conf -> conf.getConferenceName()).orElse("");
+		public Builder conferenceName(String conferenceName) {
+			newReportDto.conferenceName = conferenceName;
 			return this;			
 		}
 		

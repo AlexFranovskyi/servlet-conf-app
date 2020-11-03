@@ -110,8 +110,8 @@ public class JdbcUserDao implements UserDao {
 	}
 
 	@Override
-	public void delete(long id) {
-		// TODO Auto-generated method stub
+	public boolean delete(long id) {
+		return false;
 		
 	}
 

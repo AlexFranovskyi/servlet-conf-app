@@ -46,6 +46,22 @@ public class Servlet extends HttpServlet {
         		new ConferenceDetailsCommand());
         commands.put("update_conference",
         		new UpdateConferenceCommand());
+        commands.put("delete_conference",
+        		new DeleteConferenceCommand());
+        commands.put("reports",
+        		new ReportListCommand());
+        commands.put("post_report",
+        		new CreateReportCommand());
+        commands.put("become_speaker",
+        		new BecomeSpeakerCommand());
+        commands.put("clear_speaker",
+        		new ClearSpeakerCommand());
+        commands.put("approve_report",
+        		new ApproveReportCommand());
+        commands.put("disapprove_report",
+        		new DisapproveCommand());
+        commands.put("speaker_reports",
+        		new SpeakerReportsCommand());
         
 	}
 	

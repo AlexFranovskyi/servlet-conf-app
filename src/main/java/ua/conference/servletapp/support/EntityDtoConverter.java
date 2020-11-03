@@ -25,8 +25,8 @@ public class EntityDtoConverter {
 		return ReportDto.builder()
 				.id(report.getId())
 				.name(report.getName())
-				.speaker(report.getSpeaker())
-				.conferenceName(report.getConference())
+				.speakerName(report.getSpeaker().getUsername())
+				.conferenceName(report.getConference().getConferenceName())
 				.approved(report.isApproved())
 				.build();
 	}

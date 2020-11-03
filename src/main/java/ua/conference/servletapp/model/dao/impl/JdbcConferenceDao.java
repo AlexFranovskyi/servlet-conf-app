@@ -56,22 +56,24 @@ public class JdbcConferenceDao implements ConferenceDao {
 			+ "on c.id = chv.conference_id left join usr on chv.user_id = usr.id where c.id = ?";
 	
 	public static final String SQL_FIND_FUTURE_DISTINCT_CONFERENCES_SORTED_PAGINATED = 
-			"SELECT (select count(distinct id) from conference where local_date_time > now()) as total_pages, "
+			"SELECT (select count(distinct id) from conference where local_date_time > now()) as total_rows, "
 			+ "c.id as conf_id, c.local_date_time, c.location, c.conference_name, c.arrived_visitors_amount, "
 			+ "(select count(distinct r.id) from report as r where c.id = r.conference_id) as reportCounter, "
 			+ "(select count(distinct chv.user_id) from conference_has_visitor as chv where c.id = chv.conference_id) as visitorCounter "
-			+ "FROM conference as c  where c.local_date_time > now() order by ? limit ? offset ?";
+			+ "FROM conference as c  where c.local_date_time > now() order by ";
 	
 	public static final String SQL_FIND_PAST_DISTINCT_CONFERENCES_SORTED_PAGINATED = 
-			"SELECT (select count(distinct id) from conference where local_date_time < now()) as total_pages, "
+			"SELECT (select count(distinct id) from conference where local_date_time < now()) as total_rows, "
 			+ "c.id as conf_id, c.local_date_time, c.location, c.conference_name, c.arrived_visitors_amount, "
 			+ "(select count(distinct r.id) from report as r where c.id = r.conference_id) as reportCounter, "
 			+ "(select count(distinct chv.user_id) from conference_has_visitor as chv where c.id = chv.conference_id) as visitorCounter "
-			+ "FROM conference as c  where c.local_date_time < now() order by ? limit ? offset ?";
+			+ "FROM conference as c  where c.local_date_time < now() order by ";
 	
 	public static final String SQL_ADD_VISITOR = "insert into conference_has_visitor (conference_id, user_id) values (?, ?)";
 	public static final String SQL_UPDATE_CONFERENCE = "UPDATE conference SET local_date_time = ?, location = ?, arrived_visitors_amount = ? where id = ?";
 
+	public static final String SQL_DELETE_CONFERENCE = "DELETE FROM conference WHERE id=?";
+	
 	public JdbcConferenceDao(Connection connection) {
 		this.connection = connection;
 	}
@@ -80,33 +82,31 @@ public class JdbcConferenceDao implements ConferenceDao {
 	public Page<ConferenceDto> findAllByLocalDateTimeSorted(int begin, int end, boolean future, String sort) {
 		List <ConferenceDto> list = new ArrayList<>();
 		
-
 		ResultSet rs = null;
 		int totalRows = 0;
+		StringBuilder query = new StringBuilder();
 		
-		String query = "";
 		if (future) {
-			query = SQL_FIND_FUTURE_DISTINCT_CONFERENCES_SORTED_PAGINATED;
+			query.append(SQL_FIND_FUTURE_DISTINCT_CONFERENCES_SORTED_PAGINATED);
 		} else {
-			query = SQL_FIND_PAST_DISTINCT_CONFERENCES_SORTED_PAGINATED;
+			query.append(SQL_FIND_PAST_DISTINCT_CONFERENCES_SORTED_PAGINATED);
 		}
+		query.append(sort);
+		query.append(" limit ");
+		query.append(end);
+		query.append(" offset ");
+		query.append(begin);
 
-		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+		try (Statement stmt = connection.createStatement()) {
 			
-			int k = 1;
-			
-			pstmt.setString(k++, sort);
-			pstmt.setInt(k++, end);
-			pstmt.setInt(k++, begin);
-
-			rs = pstmt.executeQuery();
+			rs = stmt.executeQuery(query.toString());
 
 			ConferenceDtoMapper conferenceDtoMapper = new ConferenceDtoMapper();
 			
 			ConferenceDto conferenceDto = null;
-			
+			System.out.println(sort);
 			while (rs.next()) {
-				totalRows = rs.getInt("total_pages");			
+				totalRows = rs.getInt("total_rows");
 				conferenceDto = conferenceDtoMapper.extractFromResultSet(rs);
 				list.add(conferenceDto);
 			}
@@ -207,7 +207,6 @@ public class JdbcConferenceDao implements ConferenceDao {
 	
 	public boolean updateConference(long id, LocalDateTime localDateTime, 
 			String location, int arrivedVisitorsAmount) {
-			ResultSet rs = null;
 			boolean result = false;
 
 		try (PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_CONFERENCE)) {
@@ -223,8 +222,6 @@ public class JdbcConferenceDao implements ConferenceDao {
 			}
 		} catch (SQLException ex) {
 			logger.error("Some problems while conference updating", ex);
-		} finally {
-			closeAutoclosable(rs);
 		}
 		return result;
 	}
@@ -370,8 +367,19 @@ public class JdbcConferenceDao implements ConferenceDao {
 	}
 
 	@Override
-	public void delete(long id) {
+	public boolean delete(long id) {
+		boolean result = false;
+		
+		try (PreparedStatement pstmt = connection.prepareStatement(SQL_DELETE_CONFERENCE)) {
+			pstmt.setLong(1, id);
 
+			if (pstmt.executeUpdate() > 0) {
+				result = true;
+			}
+		} catch (SQLException ex) {
+			logger.error("Can't delete conference record", ex);
+		}
+		return result;
 	}
 
 	@Override

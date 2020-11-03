@@ -49,11 +49,11 @@
 		<filter-class>ua.conference.servletapp.controller.filters.AccessFilter</filter-class>
 		<init-param>
 			<param-name>admin</param-name>
-			<param-value>user_list, logout, conferences, post_conference, conference_details, update_conference</param-value>
+			<param-value>user_list, logout, conferences, post_conference, conference_details, update_conference, delete_conference, reports, post_report, clear_speaker, approve_report, disapprove_report</param-value>
 		</init-param>
 		<init-param>
 			<param-name>speaker</param-name>
-			<param-value>user_list, logout, conferences, conference_details</param-value>
+			<param-value>user_list, logout, conferences, conference_details, reports, post_report, become_speaker, speaker_reports</param-value>
 		</init-param>
 		<init-param>
 			<param-name>user</param-name>
@@ -81,7 +81,7 @@
 	
 	<error-page>
 		<exception-type>java.lang.RuntimeException</exception-type>
-		<location>/jsp/error.jsp</location>
+		<location>/WEB-INF/error.jsp</location>
 	</error-page>
 	
 </web-app>

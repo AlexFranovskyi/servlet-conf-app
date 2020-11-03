@@ -68,7 +68,7 @@
 	<c:if test="${requestScope.page != null}">
 		<c:if test="${requestScope.page.list.size() == 0}">
 			<div>
-				<b>No conferences to display</b>
+				<b><fmt:message key="noRecords" /></b>
 			</div>
 		</c:if>
 	</c:if>

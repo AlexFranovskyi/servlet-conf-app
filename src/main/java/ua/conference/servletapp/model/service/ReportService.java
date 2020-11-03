@@ -1,74 +1,77 @@
 package ua.conference.servletapp.model.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ua.conference.servletapp.model.dao.DaoFactory;
+import ua.conference.servletapp.model.dao.ReportDao;
+import ua.conference.servletapp.model.dto.ReportDto;
+import ua.conference.servletapp.support.Constants;
+import ua.conference.servletapp.support.Page;
 
-import ua.conference.springapp.Dto.ReportDto;
-import ua.conference.springapp.entity.Conference;
-import ua.conference.springapp.entity.Report;
-import ua.conference.springapp.entity.User;
-import ua.conference.springapp.repository.ConferenceRepository;
-import ua.conference.springapp.repository.ReportRepository;
-import ua.conference.springapp.support.EntityDtoConverter;
-
-@Service
 public class ReportService {
 	
-	@Autowired
-	private ReportRepository reportRepository;
-	
-	@Autowired
-	private ConferenceRepository conferenceRepository;
-	
-	public Page<ReportDto> findAllReportsDtoByConferenceId(long id, Pageable pageable){
-		return reportRepository.findAllByConferenceId(id, pageable)
-				.map(EntityDtoConverter::convertReportToDto);
+	private DaoFactory daoFactory = DaoFactory.getInstance();
+		
+	public Page<ReportDto> findAllReportsDtoByConferenceId(long id, int pageNumber){
+		int begin = pageNumber * Constants.PAGE_SIZE;
+		int end = (pageNumber + 1) * Constants.PAGE_SIZE;
+		
+		ReportDao dao = daoFactory.createReportDao();
+		Page<ReportDto> page = dao.findAllByConferenceId(id, begin, end, Constants.REPORT_SORTING);
+		
+		return page;
 	}
 	
-	@Transactional
-	public Report createReportWithName(String name, long conferenceId) {
-		Conference conference = conferenceRepository.findById(conferenceId).get();
-		return reportRepository.save(Report.builder().name(name).conference(conference).build());
+	public boolean createReportWithName(String name, long conferenceId) {
+		ReportDao dao = daoFactory.createReportDao();
+		boolean result = dao.createReportWithName(name, conferenceId);
+		dao.close();
+		return result;
 	}
 	
-	@Transactional
-	public Report createReportWithNameAndSpeaker(String name, User speaker, long conferenceId) {
-		Conference conference = conferenceRepository.findById(conferenceId).get();
-		return reportRepository.save(Report.builder().name(name).speaker(speaker).conference(conference).build());
+	public boolean createReportWithNameAndSpeaker(String name, long conferenceId, long speakerId) {
+		ReportDao dao = daoFactory.createReportDao();
+		boolean result = dao.createReportWithNameAndSpeaker(name, conferenceId, speakerId);
+		dao.close();
+		return result;
 	}
 	
-	@Transactional
-	public Report updateReportWithSpeaker(long reportId, User speaker) {
-		Report report =  reportRepository.findById(reportId).get();
-		report.setSpeaker(speaker);
-		return reportRepository.save(report);
+	
+	public boolean updateReportWithSpeaker(long reportId, long speakerId) {
+		ReportDao dao = daoFactory.createReportDao();
+		boolean result = dao.updateReportWithSpeaker(reportId, speakerId);
+		dao.close();
+		return result;
 	}
 	
-	@Transactional
-	public Report approveReport(long reportId) {
-		Report report =  reportRepository.findById(reportId).get();
-		report.setApproved(true);
-		return reportRepository.save(report);
+	public boolean approveReport(long reportId) {
+		ReportDao dao = daoFactory.createReportDao();
+		boolean result =  dao.approveReport(reportId);
+		dao.close();
+		return result;
 	}
 	
-	@Transactional
-	public Report disapproveReport(long reportId) {
-		Report report =  reportRepository.findById(reportId).get();
-		report.setApproved(false);
-		return reportRepository.save(report);
+	
+	public boolean disapproveReport(long reportId) {
+		ReportDao dao = daoFactory.createReportDao();
+		boolean result =  dao.disapproveReport(reportId);
+		dao.close();
+		return result;
 	}
 	
-	public boolean clearSpeakerFromReport(long id) {
-		if (reportRepository.clearSpeakerName(id) != 0) {
-			return true;
-		}
-		return false;	
+	public boolean clearSpeakerFromReport(long reportId) {
+		ReportDao dao = daoFactory.createReportDao();
+		boolean result = dao.removeSpeakerFromReport(reportId);
+		dao.close();
+		return result;	
 	}
 	
-	public Page<ReportDto> findAllReportsBySpeaker(User speaker, Pageable pageable){
-		return reportRepository.findAllBySpeaker(speaker, pageable).map(EntityDtoConverter::convertReportToDto);
+	public Page<ReportDto> findAllReportsBySpeaker(long speakerId, int pageNumber){
+		int begin = pageNumber * Constants.PAGE_SIZE;
+		int end = (pageNumber + 1) * Constants.PAGE_SIZE;
+		
+		ReportDao dao = daoFactory.createReportDao();
+		Page<ReportDto> page = dao.findAllBySpeakerId(speakerId, begin, end, Constants.REPORT_SORTING);
+		
+		return page;
 	}
+	
 }
